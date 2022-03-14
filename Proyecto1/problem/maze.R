@@ -1,17 +1,26 @@
 # This function must return a list with the information needed to solve the problem.
-initialize.problem <- function(rows = 3, columns = 3, perm = sample(0 : (rows * columns - 1))) {
+initialize.problem <- function(file) {
   problem <- list()
 
   # Compulsory attributes
-  problem$name              <- paste0("8-Puzzle (", rows, "x", columns, ") - [", paste0(perm, collapse = "-"), "]")
-  problem$state_initial     <- matrix(perm, nrow = rows, byrow = TRUE)
-  problem$state_final       <- matrix(0:(rows * columns - 1), nrow = rows, byrow = TRUE)
-  # There are 4 actions that move blank space: UP, DOWN, LEFT, RIGHT
+  problem$name              <- paste0("feet maze - [", file, "]")
+  problem$todo              <- read.csv(file, header = FALSE)
+  
+  
+  split(problem$todo[1],   # Vector o data frame
+        problem$mazeOk,    # Grupos de clase factor, vector o lista
+        drop = FALSE,      # Si eliminar los grupos no usados (TRUE) o no (FALSE)
+        sep = ";",         # Cadena de caracteres para separar los grupos cuando f es una lista
+        lex.order = FALSE  # Si la concatenación de factores debe ser ordenada léxicamente (TRUE) o no (FALSE)
+  )                        # Argumentos adicionales
+  
+  problem$state_initial     <- problem$todo[mazeOk[1] + 2]
+  problem$state_final       <- problem$todo[mazeOk[1] + 3]
+
+  
+  # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
   problem$actions_possible  <- data.frame(direction = c("Up", "Down", "Left", "Right"), stringsAsFactors = FALSE)
   
-  # Additional attributes
-  problem$rows              <- rows
-  problem$columns           <- columns
   
   return(problem)
 }
