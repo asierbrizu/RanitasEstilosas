@@ -1,18 +1,12 @@
 # This function must return a list with the information needed to solve the problem.
 initialize.problem <- function(file) {
   problem <- list()
-
   # Compulsory attributes
-  problem$name              <- paste0("feet maze - [", file, "]")
-  problem$todo              <- read.csv(file, header = FALSE)
+  problem$name              <- "Laberinto"
+  problem$todo              <- read.csv(file="../data/feet-maze-1b.txt", header = FALSE)
+  print(problem$todo)
   
-  
-  split(problem$todo[1],   # Vector o data frame
-        problem$mazeOk,    # Grupos de clase factor, vector o lista
-        drop = FALSE,      # Si eliminar los grupos no usados (TRUE) o no (FALSE)
-        sep = ";",         # Cadena de caracteres para separar los grupos cuando f es una lista
-        lex.order = FALSE  # Si la concatenación de factores debe ser ordenada léxicamente (TRUE) o no (FALSE)
-  )                        # Argumentos adicionales
+  problem$mazeOk=strsplit(problem$todo[1],split = ";")                        
   
   problem$state_initial     <- problem$todo[mazeOk[1] + 2]
   problem$state_final       <- problem$todo[mazeOk[1] + 3]
@@ -28,10 +22,21 @@ initialize.problem <- function(file) {
 # Analyzes if an action can be applied in a state.
 # There is an IF for each action.
 is.applicable <- function (state, action, problem) {
-  # Get the location of "blank" in the matrix
-  where <- which(state == 0, arr.ind = TRUE)
-  row <- where[1]
-  col <- where[2]
+  filas=strsplit(maze[1],split=";")[1]
+  columnas=strsplit(maze[1],split=";")[2]
+  filaInicio=strsplit(maze[filas+2],split=";")[1]
+  colInicio=strsplit(maze[filas+2],split=";")[2]
+  filaFinstrsplit(maze[filas+3],split=";")[1]
+  colFinstrsplit(maze[filas+3],split=";")[2]
+  laberinto=rep(NA,filas)
+  for(i in filas){
+    laberinto[i]<-strsplit(maze[i+1],split=";")
+  cat(laberinto[i])
+    }
+  #barIzda=maze[filas+4]
+  #barDrcha
+  #barArr
+  #barAbj
   
   if (action == "Up") {
     return(row != 1)
@@ -107,3 +112,4 @@ get.cost = function (action, state, problem) {
 get.evaluation = function(state, problem) {
   return(sum(state != problem$state_final))
 }
+

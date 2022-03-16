@@ -19,9 +19,8 @@ source("../algorithms/blind/iterative-deepening-search.R")
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
 
-# Let's try with the Sudoku
-source("../problem/Sudoku.R")
-problem <- initialize.problem("../data/sudoku-1.txt") # Easy sudoku - Only 7 blank numbers
+source("../problem/maze.R")
+problem <- initialize.problem("../data/feet-maze-1a.txt")
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
 bfs_gs <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000, graph_search = TRUE)
@@ -43,7 +42,7 @@ results <- analyze.results(list(bfs_ts, bfs_gs,
 # Print results in an HTML Table
 kable_material(kbl(results, caption = "Sudoku Easy"), c("striped", "hover"))
 
-problem <- initialize.problem("../data/sudoku-2.txt") # Hard sudoku
+problem <- initialize.problem("../data/feet-maze-1b.txt") 
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
 bfs_gs <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000, graph_search = TRUE)
