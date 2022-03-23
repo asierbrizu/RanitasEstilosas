@@ -1,15 +1,31 @@
 # This function must return a list with the information needed to solve the problem.
 initialize.problem <- function(file) {
+  print(file)
   problem <- list()
   # Compulsory attributes
   problem$name              <- "Laberinto"
-  problem$todo              <- read.csv(file="../data/feet-maze-1b.txt", header = FALSE)
-  print(problem$todo)
+  problem$maze              <- read.delim(file.choose())
+  print(problem$maze)
+  filas=strsplit(problem$maze[1],split=";")[1]
+  columnas=strsplit(maze[1],split=";")[2]
+  filaInicio=strsplit(maze[filas+2],split=";")[1]
+  colInicio=strsplit(maze[filas+2],split=";")[2]
+  filaFinstrsplit(maze[filas+3],split=";")[1]
+  colFinstrsplit(maze[filas+3],split=";")[2]
+  laberinto=rep(NA,filas)
+  for(i in filas){
+    laberinto[i]<-strsplit(maze[i+1],split=";")
+    print(laberinto[i])
+  }
+  #barIzda=maze[filas+4]
+  #barDrcha
+  #barArr
+  #barAbj
   
-  problem$mazeOk=strsplit(problem$todo[1],split = ";")                        
   
-  problem$state_initial     <- problem$todo[mazeOk[1] + 2]
-  problem$state_final       <- problem$todo[mazeOk[1] + 3]
+
+    problem$state_initial     <- problem$maze[mazeOk[1] + 2]
+  problem$state_final       <- problem$maze[mazeOk[1] + 3]
 
   
   # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
@@ -22,21 +38,7 @@ initialize.problem <- function(file) {
 # Analyzes if an action can be applied in a state.
 # There is an IF for each action.
 is.applicable <- function (state, action, problem) {
-  filas=strsplit(maze[1],split=";")[1]
-  columnas=strsplit(maze[1],split=";")[2]
-  filaInicio=strsplit(maze[filas+2],split=";")[1]
-  colInicio=strsplit(maze[filas+2],split=";")[2]
-  filaFinstrsplit(maze[filas+3],split=";")[1]
-  colFinstrsplit(maze[filas+3],split=";")[2]
-  laberinto=rep(NA,filas)
-  for(i in filas){
-    laberinto[i]<-strsplit(maze[i+1],split=";")
-  cat(laberinto[i])
-    }
-  #barIzda=maze[filas+4]
-  #barDrcha
-  #barArr
-  #barAbj
+  print(problem$name)
   
   if (action == "Up") {
     return(row != 1)
