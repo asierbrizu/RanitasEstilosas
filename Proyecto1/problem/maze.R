@@ -1,35 +1,44 @@
 # This function must return a list with the information needed to solve the problem.
 initialize.problem <- function(file) {
-  file2="feet-maze-1a.txt"
-  print(file2)
   problem <- list()
   # Compulsory attributes
   problem$name              <- "Laberinto"
-  problem$maze              <- read.table(file2,header=FALSE,sep="\n")
-#  problem$maze              <- read.csv(file2,header=FALSE)
+  print(problem$name)
+  problem$maze              <- read.table(file,header=FALSE,sep="\n")
   print(problem$maze[1,])
-  filas=strtoi(strsplit(problem$maze[1,],split=";")[1])
+  problem$filas=strtoi(strsplit(problem$maze[1,],split=";")[1])
   print(problem$maze[1,])
-  filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
-  columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
-  filaInicio=strtoi(unlist(strsplit(problem$maze[filas+2,],split=";"))[1])
-  colInicio=strtoi(unlist(strsplit(problem$maze[filas+2,],split=";"))[2])
-  filaFin=strtoi(unlist(strsplit(problem$maze[filas+3,],split=";"))[1])
-  colFin=strtoi(unlist(strsplit(problem$maze[filas+3,],split=";"))[2])
-  laberinto=rep(NA,filas)
+  problem$filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
+  problem$columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
+  problem$filaInicio=strtoi(unlist(strsplit(problem$maze[filas+2,],split=";"))[1])+1
+  problem$colInicio=strtoi(unlist(strsplit(problem$maze[filas+2,],split=";"))[2])+1
+  problem$filaFin=strtoi(unlist(strsplit(problem$maze[filas+3,],split=";"))[1])+1
+  problem$colFin=strtoi(unlist(strsplit(problem$maze[filas+3,],split=";"))[2])+1
+  problem$laberinto=rep(NA,filas)
   for(i in filas){
-    laberinto[i]<-strsplit(problem$maze[i+1],split=";")
-    print(laberinto[i])
+    problem$laberinto[i]<-strsplit(problem$maze[i+1,],split=";")
+    print(problem$laberinto[i])
   }
-  barIzda=strsplit(problem$maze[filas+4],split=";")
-  barDrcha=strsplit(problem$maze[filas+5],split=";")
-  barAbj=strsplit(problem$maze[filas+6],split=";")
-  barArr=strsplit(problem$maze[filas+7],split=";")
+  
+  #Hay que terminar esto
+  temp=unmap(strsplit(problem$maze[filas+4,],split=";"))
+  for(actual in temp){
+    problem$barIzda=paste(strtoi(temp[i,1])+1,strtoi(temp[i,2])+1,sep=",")
+  }
+  
+  temp=unmap(strsplit(problem$maze[filas+5,],split=";"))
+  problem$barDrcha=paste(strtoi(temp[1])+1,strtoi(temp[2])+1,sep=",")
+  
+  temp=unmap(strsplit(problem$maze[filas+6,],split=";"))
+  problem$barAbj=paste(strtoi(temp[1])+1,strtoi(temp[2])+1,sep=",")
+  
+  temp=unmap(strsplit(problem$maze[filas+7,],split=";"))
+  problem$barArr=paste(strtoi(temp[1])+1,strtoi(temp[2])+1,sep=",")
   
   
 
-  problem$state_initial     <- problem$maze[filas+2]
-  problem$state_final       <- problem$maze[filas+3]
+  problem$state_initial     <- problem$maze[filas+2,]
+  problem$state_final       <- problem$maze[filas+3,]
 
   
   # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
@@ -42,46 +51,116 @@ initialize.problem <- function(file) {
 # Analyzes if an action can be applied in a state.
 # There is an IF for each action.
 is.applicable <- function (state, action, problem) {
+  #Para probar
+  #state="2,1"
+  #action="Left"
+  
   print(problem$name)
-  filaActual=strsplit(state,split=",")[1]
-  columnaActual=strsplit(state,split=",")[2]
+  filaActual=strtoi(unlist(strsplit(state,split=","))[1])
+  columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
+  print("Empezamos")
   if (action == "Up") {
+    print("Arriba")
     #Comprobar que no hay vacio
-    if(filaActual==0){
-      #PROBLEMA
+    if(filaActual==1){
+      return(FALSE)
     }else{
       #Comprobar que sean pies distintos
-      if(laberinto[filaActual,columnaActual]==laberinto[filaActual-1,columnaActual]){
-        #PROBLEMA
+      if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
+        return(FALSE)
       }else{
         #Comprobar barreras
-        barrerasIzda=strsplit(maze[filas+4],split=";")
-        for(barrera in barrerasIzda){
+        for(barrera in problem$barArr){
           if(state==barrera){
-            #PROBLEMON
+            return(FALSE)
           }
-          split(maze[fila[2]+5],barrerasDrcha,drop=FALSE,sep=";",lex.order=FALSE)
-          barrerasDrcha=strsplit(maze[filas+5],split=";")
           
-            for(barrera in barrerasDrcha){
+            for(barrera in barAbj){
             
-            if(paste(filaActual,columnaActual-1,sep=",")==barrera){####HAY QUE COMPROBARLO
-              #PROBLEMON
+            if(paste(filaActual-1,columnaActual,sep=",")==barrera){####HAY QUE COMPROBARLO
+              return(FALSE)
             }
           }
         }
-      }}}
+      }}
+    }
   
   if (action == "Down") {
-    return(row != problem$rows)
+    print("Abajo")
+    #Comprobar que no hay vacio
+    if(filaActual==problem$filas){
+      return(FALSE)
+    }else{
+      #Comprobar que sean pies distintos
+      if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual+1,columnaActual]){
+        return(FALSE)
+      }else{
+        #Comprobar barreras
+        for(barrera in problem$barAbj){
+          if(state==barrera){
+            return(FALSE)
+          }
+          
+          for(barrera in problem$barArr){
+            
+            if(paste(filaActual+1,columnaActual,sep=",")==barrera){####HAY QUE COMPROBARLO
+              return(FALSE)
+            }
+          }
+        }
+      }}
   }
   
   if (action == "Left") {
-    return(col != 1)
+    print("Izquierda")
+    #Comprobar que no hay vacio
+    if(columnaActual==1){
+      return(FALSE)
+    }else{
+      #Comprobar que sean pies distintos
+      if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual,columnaActual-1]){
+        return(FALSE)
+      }else{
+        #Comprobar barreras
+        for(barrera in problem$barIzda){
+          if(state==barrera){
+            return(FALSE)
+          }
+          
+          for(barrera in barDrcha){
+            
+            if(paste(filaActual,columnaActual-1,sep=",")==barrera){####HAY QUE COMPROBARLO
+              return(FALSE)
+            }
+          }
+        }
+      }}
   }
   
   if (action == "Right") {
-    return(col != problem$columns)
+    print("Derecha")
+    #Comprobar que no hay vacio
+    if(columnaActual==problem$columnas){
+      return(FALSE)
+    }else{
+      #Comprobar que sean pies distintos
+      if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual,columnaActual+1]){
+        return(FALSE)
+      }else{
+        #Comprobar barreras
+        for(barrera in barDrcha){
+          if(state==barrera){
+            return(FALSE)
+          }
+          
+        for(barrera in barIzda){
+            
+            if(paste(filaActual,columnaActual+1,sep=",")==barrera){####HAY QUE COMPROBARLO
+              return(FALSE)
+            }
+          }
+        }
+      }}
   }
   
   return(FALSE)
@@ -90,47 +169,42 @@ is.applicable <- function (state, action, problem) {
 # Returns the state resulting on applying the action over the state.
 # There is an IF for each action.
 effect = function (state, action, problem) {
-  # Get the location of "blank" in the matrix
-  where <- which(state == 0, arr.ind = TRUE)
-  row <- where[1]
-  col <- where[2]
-  result <- state  
+  
+  filaActual=strtoi(unlist(strsplit(state,split=","))[1])
+  columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
   
   if (action == "Up") {
-    result[row-1, col] <- state[row, col]
-    result[row, col]   <- state[row-1, col]
+    result=paste(filaActual-1,columnaActual,sep=",")
     return(result)
   }
   
   if (action == "Down") {
-    result[row+1, col] <- state[row, col]
-    result[row, col]   <- state[row+1, col]
+    result=paste(filaActual+1,columnaActual,sep=",")
     return(result)
   }
   
   if (action == "Left") {
-    result[row, col-1] <- state[row, col]
-    result[row, col]   <- state[row, col-1]
+    result=paste(filaActual,columnaActual-1,sep=",")
     return(result)
   }
   
   if (action == "Right") {
-    result[row, col+1] <- state[row, col]
-    result[row, col]   <- state[row, col+1]
+    result=paste(filaActual,columnaActual+1,sep=",")
     return(result)
   }
 }
 
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) {
-  return(sum(state == final_state) == (nrow(state) * ncol(state)))
+  return(state == final_state) 
 }
 
 # Transforms a state into a string
 to.string <- function (state, problem) {
-  for (i in 1:nrow(state)) {
-    print(state[i, ])
-  }
+  filaActual=strtoi(unlist(strsplit(state,split=","))[1])
+  columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
+  
+  print(paste("Fila actual: ",filaActual,", columna actual: ",columnaActual,"."))
 }
 
 # Returns the cost of applying an action over a state
