@@ -3,61 +3,90 @@ initialize.problem <- function(file) {
   problem <- list()
   # Compulsory attributes
   problem$name              <- "Laberinto"
-  print(problem$name)
   problem$maze              <- read.table(file,header=FALSE,sep="\n")
-  print(problem$maze[1,])
-  problem$filas=strtoi(strsplit(problem$maze[1,],split=";")[1])
-  print(problem$maze[1,])
-  problem$filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
-  problem$columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
-  problem$filaInicio=strtoi(unlist(strsplit(problem$maze[filas+2,],split=";"))[1])+1
-  problem$colInicio=strtoi(unlist(strsplit(problem$maze[filas+2,],split=";"))[2])+1
-  problem$filaFin=strtoi(unlist(strsplit(problem$maze[filas+3,],split=";"))[1])+1
-  problem$colFin=strtoi(unlist(strsplit(problem$maze[filas+3,],split=";"))[2])+1
-  problem$laberinto=rep(NA,filas)
-  for(i in filas){
-    problem$laberinto[i]<-strsplit(problem$maze[i+1,],split=";")
-    print(problem$laberinto[i])
+  problem$filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
+  problem$columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
+  problem$filaInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[2])+1
+  problem$colInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[1])+1
+  problem$filaFin=strtoi(unlist(strsplit(problem$maze[problem$filas+3,],split=","))[2])+1
+  problem$colFin=strtoi(unlist(strsplit(problem$maze[problem$filas+3,],split=","))[1])+1
+  problem$laberinto=rep(NA,problem$filas)
+  #j=2
+  contFilas=1
+  for(i in problem$laberinto){
+    problem$laberinto[contFilas]=rep(NA,problem$columnas)
+    contCols=1
+    filita<-unlist(strsplit(problem$maze[contFilas+1,],split=";"))
+    
+    for(j in problem$laberinto[i]){
+    problem$laberinto[contFilas,contCols]=filita[contCols]   
+     }
+    
+    #print(paste("Filita sin unlist ",filita))
+    #filita=unlist(filita)
+    #print(paste("Filita con unlist ",filita))
+    #problem$laberinto[j-1]=filita
+    #j=j+1 
+    #print(paste("Mostrando laberinto antes de salir del for",problem$laberinto))
+    
+    
+    
   }
+  print(paste("Mostrando laberinto al final del for",problem$laberinto))
   
-  #Hay que terminar esto
-  temp=unmap(strsplit(problem$maze[filas+4,],split=";"))
+  #Barreras
+  temp=unlist(strsplit(problem$maze[problem$filas+4,],split=";"))
+  i=1
   for(actual in temp){
-    problem$barIzda=paste(strtoi(temp[i,1])+1,strtoi(temp[i,2])+1,sep=",")
+    problem$barIzda[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    i=i+1
+    }
+  
+  temp=unlist(strsplit(problem$maze[problem$filas+5,],split=";"))
+  i=1
+  for(actual in temp){
+    problem$barDrcha[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    i=i+1
   }
   
-  temp=unmap(strsplit(problem$maze[filas+5,],split=";"))
-  problem$barDrcha=paste(strtoi(temp[1])+1,strtoi(temp[2])+1,sep=",")
+  temp=unlist(strsplit(problem$maze[problem$filas+6,],split=";"))
+  i=1
+  for(actual in temp){
+    problem$barAbj[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    i=i+1
+  }
   
-  temp=unmap(strsplit(problem$maze[filas+6,],split=";"))
-  problem$barAbj=paste(strtoi(temp[1])+1,strtoi(temp[2])+1,sep=",")
-  
-  temp=unmap(strsplit(problem$maze[filas+7,],split=";"))
-  problem$barArr=paste(strtoi(temp[1])+1,strtoi(temp[2])+1,sep=",")
+  temp=unlist(strsplit(problem$maze[problem$filas+7,],split=";"))
+  i=1
+  for(actual in temp){
+    problem$barArr[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    i=i+1
+  }
   
   
 
-  problem$state_initial     <- problem$maze[filas+2,]
-  problem$state_final       <- problem$maze[filas+3,]
+  problem$state_initial     <- paste(problem$colInicio,problem$filaInicio,sep=",")
+  problem$state_final       <- paste(problem$colFin,problem$filaFin,sep=",")
 
   
   # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
   problem$actions_possible  <- data.frame(direction = c("Up", "Down", "Left", "Right"), stringsAsFactors = FALSE)
   
-  
+  print(paste("Mostrando laberinto al final del initialice",problem$laberinto))
   return(problem)
 }
 
 # Analyzes if an action can be applied in a state.
 # There is an IF for each action.
 is.applicable <- function (state, action, problem) {
+  print(paste("Mostrando laberinto al principio del isAplicable",problem$laberinto))
   #Para probar
   #state="2,1"
   #action="Left"
   
-  print(problem$name)
-  filaActual=strtoi(unlist(strsplit(state,split=","))[1])
-  columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
+  print(state)
+  filaActual=strtoi(unlist(strsplit(state,split=","))[2])
+  columnaActual=strtoi(unlist(strsplit(state,split=","))[1])
   print("Empezamos")
   if (action == "Up") {
     print("Arriba")
@@ -66,6 +95,9 @@ is.applicable <- function (state, action, problem) {
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
+      print(paste("La fila actual es ",filaActual," la columna actual es ",columnaActual))
+      print(problem$laberinto)
+      print(problem$laberinto[filaActual,columnaActual])
       if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
         return(FALSE)
       }else{
