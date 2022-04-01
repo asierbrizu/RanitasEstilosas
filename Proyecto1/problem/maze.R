@@ -57,8 +57,9 @@ initialize.problem <- function(file) {
     i=i+1
   }
   
-  problem$state_initial     <- paste(problem$colInicio,problem$filaInicio,sep=",")
-  problem$state_final       <- paste(problem$colFin,problem$filaFin,sep=",")
+  problem$state_initial     <- paste(problem$filaInicio,problem$colInicio,sep=",")
+  print(paste("State initial",problem$state_initial))
+  problem$state_final       <- paste(problem$filaFin,problem$colFin,sep=",")
 
   # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
   problem$actions_possible  <- data.frame(direction = c("Up", "Down", "Left", "Right"), stringsAsFactors = FALSE)
@@ -73,40 +74,49 @@ is.applicable <- function (state, action, problem) {
   #Para probar
   #state="2,1"
   #action="Left"
-  
-  filaActual=strtoi(unlist(strsplit(state,split=","))[2])
-  columnaActual=strtoi(unlist(strsplit(state,split=","))[1])
+  filaActual=strtoi(unlist(strsplit(state,split=","))[1])
+  columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
   if (action == "Up") {
     #Comprobar que no hay vacio
     if(filaActual==1){
+      print("Va por el de vacio (fuera de tablero)")
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
+      
     if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
-        return(FALSE)
+       
+        print("Va por el de pies iguales")
+       return(FALSE)
       }else{
         #Comprobar barreras
         for(barrera in problem$barArr){
           if(state==barrera){
+            print("Va por el de comprobar barreras de la casilla actual")
             return(FALSE)
           }
           
             for(barrera in problem$barAbj){
             
             if(paste(filaActual-1,columnaActual,sep=",")==barrera){####HAY QUE COMPROBARLO
+              
+              print("Va por el de comprobar barreras de la casilla destino")
               return(FALSE)
             }
           }
         }
       }}
+    return(TRUE)
     }
   
   if (action == "Down") {
     #Comprobar que no hay vacio
+
     if(filaActual==problem$filas){
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
+
       if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual+1,columnaActual]){
         return(FALSE)
       }else{
@@ -124,7 +134,8 @@ is.applicable <- function (state, action, problem) {
           }
         }
       }}
-  }
+    return(TRUE)
+    }
   
   if (action == "Left") {
     #Comprobar que no hay vacio
@@ -132,6 +143,7 @@ is.applicable <- function (state, action, problem) {
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
+
       if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual,columnaActual-1]){
         return(FALSE)
       }else{
@@ -149,14 +161,17 @@ is.applicable <- function (state, action, problem) {
           }
         }
       }}
+    return(TRUE)
   }
   
   if (action == "Right") {
     #Comprobar que no hay vacio
+
     if(columnaActual==problem$columnas){
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
+   
       if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual,columnaActual+1]){
         return(FALSE)
       }else{
@@ -174,6 +189,8 @@ is.applicable <- function (state, action, problem) {
           }
         }
       }}
+    
+    return(TRUE)
   }
   
   return(FALSE)
@@ -182,34 +199,37 @@ is.applicable <- function (state, action, problem) {
 # Returns the state resulting on applying the action over the state.
 # There is an IF for each action.
 effect = function (state, action, problem) {
-  
+  print(paste("Se va a ejecutar la accion: ",action," y el estado antes de hacerlo es: ",state))
   filaActual=strtoi(unlist(strsplit(state,split=","))[1])
   columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
   
   if (action == "Up") {
     result=paste(filaActual-1,columnaActual,sep=",")
-    return(result)
+    print(paste("El estado despues de la accion es: ",result))
   }
   
   if (action == "Down") {
     result=paste(filaActual+1,columnaActual,sep=",")
+    print(paste("El estado despues de la accion es: ",result))
     return(result)
   }
   
   if (action == "Left") {
     result=paste(filaActual,columnaActual-1,sep=",")
+    print(paste("El estado despues de la accion es: ",result))
     return(result)
   }
   
   if (action == "Right") {
     result=paste(filaActual,columnaActual+1,sep=",")
+    print(paste("El estado despues de la accion es: ",result))
     return(result)
   }
 }
 
 # Analyzes if a state is final or not
 is.final.state <- function (state, final_state, problem) {
-  return(state == final_state) 
+  return(state == problem$state_final) 
 }
 
 # Transforms a state into a string
