@@ -4,14 +4,19 @@ initialize.problem <- function(file) {
   # Compulsory attributes
   problem$name              <- "Laberinto"
   problem$maze              <- read.table(file,header=FALSE,sep="\n")
+  
   problem$filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
   problem$columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
+  
   problem$filaInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[2])+1
   problem$colInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[1])+1
   problem$filaFin=strtoi(unlist(strsplit(problem$maze[problem$filas+3,],split=","))[2])+1
   problem$colFin=strtoi(unlist(strsplit(problem$maze[problem$filas+3,],split=","))[1])+1
+  
   vacio=rep(NA,problem$filas*problem$columnas)
+  
   problem$laberinto=matrix(c(vacio), nrow=problem$filas, ncol=problem$columnas, byrow=TRUE)
+  
   for(contFilas in 1:problem$filas){
     filita<-unlist(strsplit(problem$maze[contFilas+1,],split=";"))
     for(contCols in 1:problem$columnas){
@@ -76,7 +81,9 @@ is.applicable <- function (state, action, problem) {
   #action="Left"
   filaActual=strtoi(unlist(strsplit(state,split=","))[1])
   columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
+  
   if (action == "Up") {
+    
     #Comprobar que no hay vacio
     if(filaActual==1){
       print("Va por el de vacio (fuera de tablero)")
@@ -206,6 +213,7 @@ effect = function (state, action, problem) {
   if (action == "Up") {
     result=paste(filaActual-1,columnaActual,sep=",")
     print(paste("El estado despues de la accion es: ",result))
+    return(result)
   }
   
   if (action == "Down") {

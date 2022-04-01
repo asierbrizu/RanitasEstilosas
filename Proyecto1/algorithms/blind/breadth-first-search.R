@@ -6,20 +6,19 @@ breadth.first.search = function(problem,
   
   name_method      <- paste0("Breadth First Search", ifelse(graph_search, " + GS", ""))
   state_initial    <- problem$state_initial
-  print(paste("State initial del algo: ",state_initial))
   state_final      <- problem$state_final
   actions_possible <- problem$actions_possible
+  
   # Get Start time
   start_time       <- Sys.time()
-  print(paste("State initial antes del node: ",state_initial))
+  
   node <- list(parent = c(),
                state = state_initial,
                actions = c(),
                depth = 0,
-			         cost = 0)
-  print(paste("node: ",node))
+               cost = 0)
   frontier <- list(node)
-
+  
   if (graph_search) {
     expanded_nodes <- list()     
   }
@@ -47,7 +46,6 @@ breadth.first.search = function(problem,
     }
     
     #Remove the first node of the frontier list
-    print(paste("Frontier[[1]]: ",frontier[[1]]))
     node_first <- frontier[[1]]
     frontier[[1]] = NULL
     
@@ -60,8 +58,6 @@ breadth.first.search = function(problem,
     
     #If the node extracted from frontier contains the final state
     #the algorithm ends because the solution has be founded
-    print(paste("Node first. ",node_first))
-    print(paste("Node first state. ",node_first$state))
     if (is.final.state(node_first$state, state_final, problem)) {
       end_reason <- "Solution"
       break
@@ -129,7 +125,7 @@ breadth.first.search = function(problem,
   result <- list()
   result$name    <- name_method
   result$runtime <- end_time - start_time
-
+  
   # Show the obtained (or not) final solution
   if (end_reason == "Solution") {
     print("Solution found!!", quote = FALSE)
