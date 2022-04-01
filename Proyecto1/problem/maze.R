@@ -92,9 +92,7 @@ is.applicable <- function (state, action, problem) {
       #Comprobar que sean pies distintos
       
     if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
-       
-        print("Va por el de pies iguales")
-       return(FALSE)
+      return(FALSE)
       }else{
         #Comprobar barreras
         for(barrera in problem$barArr){
