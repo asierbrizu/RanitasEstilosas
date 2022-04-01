@@ -28,33 +28,30 @@ initialize.problem <- function(file) {
 
   #Barreras
   temp=unlist(strsplit(problem$maze[problem$filas+4,],split=";"))
-  print(paste("Temp: ",temp))
   i=1
   for(actual in temp){
-    print(paste("Actual: ",actual))
-    problem$barIzda[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
-    print(paste("El contenido metido en el problem es: ",problem$barIzda[i]))
+    problem$barIzda[i]=paste(strtoi(unlist(strsplit(actual,split=","))[2])+1,strtoi(unlist(strsplit(actual,split=","))[1])+1,sep=",")
     i=i+1
     }
   
   temp=unlist(strsplit(problem$maze[problem$filas+5,],split=";"))
   i=1
   for(actual in temp){
-    problem$barDrcha[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    problem$barDrcha[i]=paste(strtoi(unlist(strsplit(actual,split=","))[2])+1,strtoi(unlist(strsplit(actual,split=","))[1])+1,sep=",")
     i=i+1
   }
   
   temp=unlist(strsplit(problem$maze[problem$filas+6,],split=";"))
   i=1
   for(actual in temp){
-    problem$barAbj[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    problem$barAbj[i]=paste(strtoi(unlist(strsplit(actual,split=","))[2])+1,strtoi(unlist(strsplit(actual,split=","))[1])+1,sep=",")
     i=i+1
   }
   
   temp=unlist(strsplit(problem$maze[problem$filas+7,],split=";"))
   i=1
   for(actual in temp){
-    problem$barArr[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    problem$barArr[i]=paste(strtoi(unlist(strsplit(actual,split=","))[2])+1,strtoi(unlist(strsplit(actual,split=","))[1])+1,sep=",")
     i=i+1
   }
   
@@ -65,16 +62,12 @@ initialize.problem <- function(file) {
   # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
   problem$actions_possible  <- data.frame(direction = c("Up", "Down", "Left", "Right"), stringsAsFactors = FALSE)
   
-  #print(paste("Mostrando laberinto al final del initialice",problem$laberinto))
   return(problem)
 }
 
 # Analyzes if an action can be applied in a state.
 # There is an IF for each action.
 is.applicable <- function (state, action, problem) {
-  #Para probar
-  #state="2,1"
-  #action="Left"
   filaActual=strtoi(unlist(strsplit(state,split=","))[1])
   columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
   
@@ -82,18 +75,17 @@ is.applicable <- function (state, action, problem) {
     
     #Comprobar que no hay vacio
     if(filaActual==1){
-      print("Va por el de vacio (fuera de tablero)")
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
-      
     if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
       return(FALSE)
       }else{
+        print(paste("Ahora estamos en:",problem$laberinto[filaActual,columnaActual]))
+        
         #Comprobar barreras
         for(barrera in problem$barArr){
           if(state==barrera){
-            print("Va por el de comprobar barreras de la casilla actual")
             return(FALSE)
           }
           
@@ -101,7 +93,6 @@ is.applicable <- function (state, action, problem) {
             
             if(paste(filaActual-1,columnaActual,sep=",")==barrera){####HAY QUE COMPROBARLO
               
-              print("Va por el de comprobar barreras de la casilla destino")
               return(FALSE)
             }
           }
@@ -200,7 +191,6 @@ is.applicable <- function (state, action, problem) {
 # Returns the state resulting on applying the action over the state.
 # There is an IF for each action.
 effect = function (state, action, problem) {
-  print(paste("Se va a ejecutar la accion: ",action," y el estado antes de hacerlo es: ",state))
   filaActual=strtoi(unlist(strsplit(state,split=","))[1])
   columnaActual=strtoi(unlist(strsplit(state,split=","))[2])
   
