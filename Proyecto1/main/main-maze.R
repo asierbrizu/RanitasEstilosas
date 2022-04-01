@@ -20,7 +20,7 @@ source("../algorithms/blind/iterative-deepening-search.R")
 source("../algorithms/results-analysis/analyze-results.R")
 
 source("../problem/maze.R")
-problem <- initialize.problem("../data/feet-maze-2a.txt")
+problem <- initialize.problem("../data/feet-maze-3a.txt")
 
 bfs_ts <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000)   
 bfs_gs <- breadth.first.search(problem, max_iterations = 2500, count_print = 1000, graph_search = TRUE)

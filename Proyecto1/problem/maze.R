@@ -5,8 +5,8 @@ initialize.problem <- function(file) {
   problem$name              <- "Laberinto"
   problem$maze              <- read.table(file,header=FALSE,sep="\n")
   
-  problem$filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
-  problem$columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
+  problem$filas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[1])
+  problem$columnas=strtoi(unlist(strsplit(problem$maze[1,],split=";"))[2])
   
   problem$filaInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[2])+1
   problem$colInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[1])+1
@@ -20,24 +20,20 @@ initialize.problem <- function(file) {
   for(contFilas in 1:problem$filas){
     filita<-unlist(strsplit(problem$maze[contFilas+1,],split=";"))
     for(contCols in 1:problem$columnas){
-    #print(paste("Lo que le vamos a meter es: ",filita[contCols]," contFilas: ",contFilas," contCols: ",contCols))
     problem$laberinto[contFilas,contCols]<-filita[contCols]   
     }
     
-    #print(paste("Laberinto[1,2]: ",problem$laberinto[1,2]))
-    #print(paste("Laberinto[3,3]: ",problem$laberinto[3,3]))
-    #print(paste("Laberinto[5,1]: ",problem$laberinto[5,1]))
-    #print(paste("Laberinto[7,7]: ",problem$laberinto[7,7]))
-    #print(paste("Laberinto[4,6]: ",problem$laberinto[4,6]))
-    #print(paste("Laberinto entero: ", problem$laberinto))
-
+    
   }
 
   #Barreras
   temp=unlist(strsplit(problem$maze[problem$filas+4,],split=";"))
+  print(paste("Temp: ",temp))
   i=1
   for(actual in temp){
+    print(paste("Actual: ",actual))
     problem$barIzda[i]=paste(strtoi(actual[2])+1,strtoi(actual[1])+1,sep=",")
+    print(paste("El contenido metido en el problem es: ",problem$barIzda[i]))
     i=i+1
     }
   
