@@ -10,30 +10,24 @@ initialize.problem <- function(file) {
   problem$colInicio=strtoi(unlist(strsplit(problem$maze[problem$filas+2,],split=","))[1])+1
   problem$filaFin=strtoi(unlist(strsplit(problem$maze[problem$filas+3,],split=","))[2])+1
   problem$colFin=strtoi(unlist(strsplit(problem$maze[problem$filas+3,],split=","))[1])+1
-  problem$laberinto=rep(NA,problem$filas)
-  #j=2
-  contFilas=1
-  for(i in problem$laberinto){
-    problem$laberinto[contFilas]=rep(NA,problem$columnas)
-    contCols=1
+  vacio=rep(NA,problem$filas*problem$columnas)
+  problem$laberinto=matrix(c(vacio), nrow=problem$filas, ncol=problem$columnas, byrow=TRUE)
+  for(contFilas in 1:problem$filas){
     filita<-unlist(strsplit(problem$maze[contFilas+1,],split=";"))
+    for(contCols in 1:problem$columnas){
+    #print(paste("Lo que le vamos a meter es: ",filita[contCols]," contFilas: ",contFilas," contCols: ",contCols))
+    problem$laberinto[contFilas,contCols]<-filita[contCols]   
+    }
     
-    for(j in problem$laberinto[i]){
-    problem$laberinto[contFilas,contCols]=filita[contCols]   
-     }
-    
-    #print(paste("Filita sin unlist ",filita))
-    #filita=unlist(filita)
-    #print(paste("Filita con unlist ",filita))
-    #problem$laberinto[j-1]=filita
-    #j=j+1 
-    #print(paste("Mostrando laberinto antes de salir del for",problem$laberinto))
-    
-    
-    
+    #print(paste("Laberinto[1,2]: ",problem$laberinto[1,2]))
+    #print(paste("Laberinto[3,3]: ",problem$laberinto[3,3]))
+    #print(paste("Laberinto[5,1]: ",problem$laberinto[5,1]))
+    #print(paste("Laberinto[7,7]: ",problem$laberinto[7,7]))
+    #print(paste("Laberinto[4,6]: ",problem$laberinto[4,6]))
+    #print(paste("Laberinto entero: ", problem$laberinto))
+
   }
-  print(paste("Mostrando laberinto al final del for",problem$laberinto))
-  
+
   #Barreras
   temp=unlist(strsplit(problem$maze[problem$filas+4,],split=";"))
   i=1
@@ -63,42 +57,32 @@ initialize.problem <- function(file) {
     i=i+1
   }
   
-  
-
   problem$state_initial     <- paste(problem$colInicio,problem$filaInicio,sep=",")
   problem$state_final       <- paste(problem$colFin,problem$filaFin,sep=",")
 
-  
   # There are 4 actions that move: UP, DOWN, LEFT, RIGHT
   problem$actions_possible  <- data.frame(direction = c("Up", "Down", "Left", "Right"), stringsAsFactors = FALSE)
   
-  print(paste("Mostrando laberinto al final del initialice",problem$laberinto))
+  #print(paste("Mostrando laberinto al final del initialice",problem$laberinto))
   return(problem)
 }
 
 # Analyzes if an action can be applied in a state.
 # There is an IF for each action.
 is.applicable <- function (state, action, problem) {
-  print(paste("Mostrando laberinto al principio del isAplicable",problem$laberinto))
   #Para probar
   #state="2,1"
   #action="Left"
   
-  print(state)
   filaActual=strtoi(unlist(strsplit(state,split=","))[2])
   columnaActual=strtoi(unlist(strsplit(state,split=","))[1])
-  print("Empezamos")
   if (action == "Up") {
-    print("Arriba")
     #Comprobar que no hay vacio
     if(filaActual==1){
       return(FALSE)
     }else{
       #Comprobar que sean pies distintos
-      print(paste("La fila actual es ",filaActual," la columna actual es ",columnaActual))
-      print(problem$laberinto)
-      print(problem$laberinto[filaActual,columnaActual])
-      if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
+    if(problem$laberinto[filaActual,columnaActual]==problem$laberinto[filaActual-1,columnaActual]){
         return(FALSE)
       }else{
         #Comprobar barreras
@@ -107,7 +91,7 @@ is.applicable <- function (state, action, problem) {
             return(FALSE)
           }
           
-            for(barrera in barAbj){
+            for(barrera in problem$barAbj){
             
             if(paste(filaActual-1,columnaActual,sep=",")==barrera){####HAY QUE COMPROBARLO
               return(FALSE)
@@ -118,7 +102,6 @@ is.applicable <- function (state, action, problem) {
     }
   
   if (action == "Down") {
-    print("Abajo")
     #Comprobar que no hay vacio
     if(filaActual==problem$filas){
       return(FALSE)
@@ -144,7 +127,6 @@ is.applicable <- function (state, action, problem) {
   }
   
   if (action == "Left") {
-    print("Izquierda")
     #Comprobar que no hay vacio
     if(columnaActual==1){
       return(FALSE)
@@ -159,7 +141,7 @@ is.applicable <- function (state, action, problem) {
             return(FALSE)
           }
           
-          for(barrera in barDrcha){
+          for(barrera in problem$barDrcha){
             
             if(paste(filaActual,columnaActual-1,sep=",")==barrera){####HAY QUE COMPROBARLO
               return(FALSE)
@@ -170,7 +152,6 @@ is.applicable <- function (state, action, problem) {
   }
   
   if (action == "Right") {
-    print("Derecha")
     #Comprobar que no hay vacio
     if(columnaActual==problem$columnas){
       return(FALSE)
@@ -180,12 +161,12 @@ is.applicable <- function (state, action, problem) {
         return(FALSE)
       }else{
         #Comprobar barreras
-        for(barrera in barDrcha){
+        for(barrera in problem$barDrcha){
           if(state==barrera){
             return(FALSE)
           }
           
-        for(barrera in barIzda){
+        for(barrera in problem$barIzda){
             
             if(paste(filaActual,columnaActual+1,sep=",")==barrera){####HAY QUE COMPROBARLO
               return(FALSE)
