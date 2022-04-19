@@ -12,6 +12,7 @@ library(magrittr)
 # Include algorithm functions
 source("../algorithms/blind/expand-node.R")
 source("../algorithms/informed/hill-climbing-search.R")
+source("../algorithms/informed/random-restart-hill-climbing.R")
 
 # Include functions for data analysis and result plot
 source("../algorithms/results-analysis/analyze-results.R")
@@ -25,6 +26,31 @@ execute.hill.climbing <- function(filename, p) {
   problem <- initialize.problem(p = p, filename = filename)
   # Execute hill climbing
   return(hill.climbing.search(problem = problem))
+}
+
+# Ejecuta el random hill climbing
+random.restart.hill.climbing <- function(file, p, times) {
+  # Execute hill climbing 'n' times
+  results <- vector(mode = "list", length = times)
+  
+  for (i in 1:times) {
+    results[[i]] <- execute.hill.climbing(filename = file, p = p)
+  }
+  
+  # Initialize a problem instance for the analysis
+  problem <- initialize.problem(filename = file, p = p)
+  
+  # Analyze results
+  results_df <- local.analyze.results(results, problem)
+  
+  print(paste0("Best evaluation: ", round(min(results_df$Evaluation), 2), 
+               " - Mean: ", round(mean(results_df$Evaluation), 2), 
+               " - SD: ", round(sd(results_df$Evaluation), 2)), quote = FALSE)
+  print(paste0("Best runtime: ", round(min(results_df$Runtime), 2), 
+               " - Mean: ", round(mean(results_df$Runtime), 2), 
+               " - SD: ", round(sd(results_df$Runtime), 2)), quote = FALSE)
+  
+  return(results_df)
 }
 
 # Execute Hill Climbing several times and analyze results
@@ -67,5 +93,15 @@ file        <- "../data/p-hub/AP100.txt"
 p           <- 3
 times       <- 10
 results_df  <- test.hill.climbing(file, p, times)
+# Print results in an HTML Table
+kable_material(kbl(results_df, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))
+
+
+
+#Lo nuestro
+file        <- "../data/p-hub/AP100.txt"
+p           <- 3
+times       <- 10
+results_df  <- random.restart.hill.climbing(file, p, times)
 # Print results in an HTML Table
 kable_material(kbl(results_df, caption = "p-hub AP100"),  c("striped", "hover", "condensed", "responsive"))
