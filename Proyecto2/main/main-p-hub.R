@@ -48,11 +48,11 @@ for(i in 1:10){
   all_results[[4,i]] <- random.restart.hill.climbing(file, p, times)
   
   #Local Beam Search
-  beams              <- 10
+  beams              <- 3
   all_results[[5,i]] <- local.beam.search(problem, beams)
-  beams              <- 20
+  beams              <- 5
   all_results[[6,i]] <- local.beam.search(problem, beams)
-  beams              <- 50
+  beams              <- 10
   all_results[[7,i]] <- local.beam.search(problem, beams)
   
   print(paste0(i, " loop"))
