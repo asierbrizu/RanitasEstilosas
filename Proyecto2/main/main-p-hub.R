@@ -36,7 +36,6 @@ p    <- 4
 problem <- initialize.problem(p = p, filename = file)
 
 for(i in 1:10){
-  
   #Hill Climbing Search
   all_results[[1,i]] <- hill.climbing.search(problem = problem)
   
@@ -47,7 +46,7 @@ for(i in 1:10){
   all_results[[3,i]] <- random.restart.hill.climbing(file, p, times)
   times              <- 50
   all_results[[4,i]] <- random.restart.hill.climbing(file, p, times)
-  eae
+  
   #Local Beam Search
   beams              <- 10
   all_results[[5,i]] <- local.beam.search(problem, beams)
