@@ -25,40 +25,31 @@ source("../problem/p-hub-problem.R")
 cat("\014")
 graphics.off()
 
-test <- 7
+all_results  <- matrix(list(), nrow=7, ncol=10)
+best_results <- vector(mode = "list", length = 7)
 
-all_results  <- matrix(list(), nrow=test, ncol=10)
-best_results <- vector(mode = "list", length = test)
+filename <- "../data/p-hub/AP40.txt"
 
-file <- "../data/p-hub/AP50.txt"
-p    <- 4
-
-problem <- initialize.problem(p = p, filename = file)
+problem <- initialize.problem(p = 4, filename = filename)
 
 for(i in 1:10){
   #Hill Climbing Search
   all_results[[1,i]] <- hill.climbing.search(problem = problem)
-  
   #Random Restart Hill Climbing
-  times              <- 10
-  all_results[[2,i]] <- random.restart.hill.climbing(file, p, times)
-  times              <- 20
-  all_results[[3,i]] <- random.restart.hill.climbing(file, p, times)
-  times              <- 50
-  all_results[[4,i]] <- random.restart.hill.climbing(file, p, times)
-  
+  all_results[[2,i]] <- random.restart.hill.climbing(filename, 4, 10)
+  all_results[[3,i]] <- random.restart.hill.climbing(filename, 4, 20)
+  all_results[[4,i]] <- random.restart.hill.climbing(filename, 4, 50)
   #Local Beam Search
-  beams              <- 3
-  all_results[[5,i]] <- local.beam.search(problem, beams)
-  beams              <- 5
-  all_results[[6,i]] <- local.beam.search(problem, beams)
-  beams              <- 10
-  all_results[[7,i]] <- local.beam.search(problem, beams)
+  all_results[[5,i]] <- local.beam.search(problem, 3)
+  all_results[[6,i]] <- local.beam.search(problem, 5)
+  all_results[[7,i]] <- local.beam.search(problem, 10)
   
-  print(paste0(i, " loop"))
+  if(i==10){ #Tarda mucho, es para saber cuando acaba.
+    print("Aqui termina.")
+  }
 }
 
-for (i in 1:test) {
+for (i in 1:7) {
   results <- local.analyze.results(all_results[i,], problem)
   
   print(all_results[[i,1]]$name)
