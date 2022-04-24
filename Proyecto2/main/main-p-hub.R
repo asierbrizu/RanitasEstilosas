@@ -30,7 +30,7 @@ test <- 7
 all_results  <- matrix(list(), nrow=test, ncol=10)
 best_results <- vector(mode = "list", length = test)
 
-file <- "../data/p-hub/AP40.txt"
+file <- "../data/p-hub/AP50.txt"
 p    <- 4
 
 problem <- initialize.problem(p = p, filename = file)
@@ -41,19 +41,19 @@ for(i in 1:10){
   all_results[[1,i]] <- hill.climbing.search(problem = problem)
   
   #Random Restart Hill Climbing
-  times              <- 1
+  times              <- 10
   all_results[[2,i]] <- random.restart.hill.climbing(file, p, times)
-  times              <- 2
+  times              <- 20
   all_results[[3,i]] <- random.restart.hill.climbing(file, p, times)
-  times              <- 3
+  times              <- 50
   all_results[[4,i]] <- random.restart.hill.climbing(file, p, times)
-  
+  eae
   #Local Beam Search
-  beams              <- 1
+  beams              <- 10
   all_results[[5,i]] <- local.beam.search(problem, beams)
-  beams              <- 2
+  beams              <- 20
   all_results[[6,i]] <- local.beam.search(problem, beams)
-  beams              <- 3
+  beams              <- 50
   all_results[[7,i]] <- local.beam.search(problem, beams)
   
   print(paste0(i, " loop"))
@@ -77,4 +77,4 @@ for (i in 1:test) {
 
 # Print results in an HTML Table
 results_df  <- local.analyze.results(best_results, problem)
-kable_material(kbl(results_df, caption = "p-hub AP40"),  c("striped", "hover", "condensed", "responsive"))
+kable_material(kbl(results_df),  c("striped", "hover", "condensed", "responsive"))
