@@ -44,7 +44,7 @@ for(i in 1:10){
   all_results[[6,i]] <- local.beam.search(problem, 5)
   all_results[[7,i]] <- local.beam.search(problem, 10)
   
-  if(i==10){ #Tarda mucho, es para saber cuando acaba.
+  if(i==10){ #Tarda mucho, es para saber cuando acaba y seguir ejecutando.
     print("Aqui termina.")
   }
 }
