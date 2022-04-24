@@ -30,7 +30,7 @@ test <- 7
 all_results  <- matrix(list(), nrow=test, ncol=10)
 best_results <- vector(mode = "list", length = test)
 
-file <- "../data/p-hub/AP50.txt"
+file <- "../data/p-hub/AP55.txt"
 p    <- 4
 
 problem <- initialize.problem(p = p, filename = file)
