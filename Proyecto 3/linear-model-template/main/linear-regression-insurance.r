@@ -38,7 +38,7 @@ for (col_name in colnames(data)) {
   print(paste0(col_name, ": ", cor(data$charges, data[[col_name]])), quote=FALSE)
 }
 
-training.models <- function(nTrainings, data) {
+training.models <- function(numTrainings, data) {
   result            <- list()
   result$best_model <- NULL
   result$avg_error  <- 0
@@ -47,26 +47,14 @@ training.models <- function(nTrainings, data) {
   # Percentage of training examples
   training_p <- 0.8
   
-  for (i in 1:nTrainings){
-    # Generate data partition 80% training / 20% test. The result is a vector with 
-    # the indexes of the examples that will be used for the training of the model.
+  for (i in 1:numTrainings){
     training_samples <- createDataPartition(y = data$charges, p = training_p, list = FALSE)
-    
-    # Split training and test data
     training_data <- data[training_samples, ]
     test_data     <- data[-training_samples, ]
-    
-    # Create Linear Model using training data. Formula = all the columns except charges
     model <- lm(formula = training_data$charges ~., data = training_data)
-    
-    # Make the prediction using the model and test data
     prediction <- predict(model, test_data)
-    
-    # Calculate Mean Average Error
     mean_avg_error <- mean(abs(prediction - test_data$charges))
-    
     result$avg_error <- result$avg_error + mean_avg_error
-    
     if(mean_avg_error < result$best_error){
       result$best_error <- mean_avg_error
       result$best_model <- model
@@ -75,49 +63,37 @@ training.models <- function(nTrainings, data) {
   return(result)
 }
 
-nTrainings <- 10
+numTrainings <- 10
 
-result <- training.models(nTrainings, data)
+result <- training.models(numTrainings, data)
 
-print(paste0("- Mean average error of all training models: ", (result$avg_error/nTrainings)))
-print(paste0("- Mean average error of the best model: ", result$best_error))
+print(paste0("- Error medio medio de todos los modelos: ", (result$avg_error/numTrainings)))
+print(paste0("- Error medio medio del mejor modelo: ", result$best_error))
 
-# Print model summary
+# Resumen mejor modelo
 summary(result$best_model)
 
-print("--------------------------------------------------------------")
-print("Pregunta 1:")
-
+#Esto es lo referente a la primera cuestion
 data_ns        <- data[20,]
 data_ns$smoker <- 0
-
 prediction <- predict(result$best_model, data_ns)
 data_ns    <- transform(data_ns, charges = prediction - charges)
-
 print(data[20,])
 print(data_ns)
 
-print("--------------------------------------------------------------")
-print("Pregunta 2:")
-
+#Esto es lo referente a la segunda cuestion
 data_ys        <- data[3,]
 data_ys$smoker <- 1
-
 prediction <- predict(result$best_model, data_ys)
 data_ys    <- transform(data_ys, charges = prediction - charges)
-
 print(data[3,])
 print(data_ys)
 
-print("--------------------------------------------------------------")
-print("Pregunta 3:")
-
+#Esto es lo referente a la tercera cuestion
 data_5 <- transform(data, age = age + 5)
-
 prediction <- predict(result$best_model, data_5)
 data_5     <- transform(data_5, charges = prediction - charges)
 data_5_or  <- data_5[order(data_5$charges, decreasing=TRUE),]
-
-print("3 Perosnas con mayor coste:")
+print("Las 3 personas con mayor coste son:")
 print(data_5_or[1:3,])
 
