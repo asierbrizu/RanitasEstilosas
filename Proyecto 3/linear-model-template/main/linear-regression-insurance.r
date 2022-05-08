@@ -31,8 +31,8 @@ for (col_name in colnames(data)) {
   }
 }
 
-# Correlation between variables
-print("Correlation between each attribute and charges: A low correlation (-0.2 < x < 0.2)", quote=FALSE)
+# Correlacion
+print("Correlación entre cada atributo y coste: Baja correlacion (-0.2 < x < 0.2)", quote=FALSE)
 
 for (col_name in colnames(data)) {
   print(paste0(col_name, ": ", cor(data$charges, data[[col_name]])), quote=FALSE)
